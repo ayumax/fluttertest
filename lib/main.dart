@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertest/newview1.dart';
-import 'package:fluttertest/screens/mainButton.dart';
-//import 'package:flutter/rendering.dart';
 
 void main() {
-  //debugPaintSizeEnabled = true;
   runApp(MyApp());
 }
 
@@ -12,103 +8,47 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      home: MainPage(),
-    );
+        theme: ThemeData(
+          brightness: Brightness.dark,
+          primaryColor: Colors.lightBlue[800],
+          accentColor: Colors.cyan[600],
+        ),
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        home: Scaffold(
+          appBar: AppBar(title: Text("test")),
+          body: NewView(),
+        ));
   }
 }
 
-class MainPage extends StatelessWidget {
+class NewView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Widget titleSection = Container(
-      padding: const EdgeInsets.all(32),
-      child: Row(
-        children: [
-          Expanded(
-            /*1*/
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /*2*/
-                Container(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    'Oeschinen Lake Campground',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Text(
-                  'Kandersteg, Switzerland',
-                  style: TextStyle(
-                    color: Colors.grey[500],
-                  ),
-                ),
-              ],
-            ),
+    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Container(
+          width: 30,
+          height: 30,
+          margin: EdgeInsets.all(10),
+          child: Image.asset("images/Icon.jpg")),
+      Flexible(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Text(
+            "ayumax ",
+            style: Theme.of(context).primaryTextTheme.overline,
           ),
-          /*3*/
-          Icon(
-            Icons.star,
-            color: Colors.red[500],
+          Text(
+            "@ayuma_x",
+            style: Theme.of(context).primaryTextTheme.overline,
           ),
-          Text('41'),
-        ],
-      ),
-    );
-
-    Color color = Theme.of(context).primaryColor;
-
-    Widget buttonSection = Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          TopButton(color, Icons.call, 'CALL'),
-          TopButton(color, Icons.near_me, 'ROUTE'),
-          TopButton(color, Icons.share, 'SHARE'),
-        ],
-      ),
-    );
-
-    Widget textSection = Container(
-      padding: const EdgeInsets.all(32),
-      child: Text(
-        'Lake Oeschinen lies at the foot of the Blüemlisalp in the Bernese '
-        'Alps. Situated 1,578 meters above sea level, it is one of the '
-        'larger Alpine Lakes. A gondola ride from Kandersteg, followed by a '
-        'half-hour walk through pastures and pine forest, leads you to the '
-        'lake, which warms to 20 degrees Celsius in the summer. Activities '
-        'enjoyed here include rowing, and riding the summer toboggan run.',
-        softWrap: true,
-      ),
-    );
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Flutter layout demo'),
-      ),
-      body: ListView(
-        children: [
-          Image.asset(
-            'images/photo.jpg',
-            width: 600,
-            height: 240,
-            fit: BoxFit.cover,
-          ),
-          titleSection,
-          buttonSection,
-          textSection,
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.apps),
-          onPressed: () =>
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return NewView1();
-              }))),
-    );
+        ]),
+        Text(
+            "これからFlutterの学習をしていきます。\nまずはTwitterの見た目を再現してみたいと思います。いずれは動的に表示したいですが、まずは静的な見た目で。",
+            textAlign: TextAlign.left,
+            style: Theme.of(context).primaryTextTheme.bodyText2)
+      ])),
+    ]);
   }
 }
