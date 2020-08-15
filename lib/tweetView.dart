@@ -27,7 +27,7 @@ class _TweetControl extends StatelessWidget {
               FlatButton(
                 onPressed: () {
                   Provider.of<TweetClient>(context, listen: false)
-                      .doTweet("ayumax", "@ayuma_x", _tweetTextController.text);
+                      .doTweet('ayumax', '@ayuma_x', _tweetTextController.text);
 
                   Navigator.of(context).pop();
                 },
@@ -44,7 +44,7 @@ class _TweetControl extends StatelessWidget {
           TextField(
             controller: _tweetTextController,
             maxLines: 10,
-            decoration: const InputDecoration(hintText: "いまどうしてる？"),
+            decoration: const InputDecoration(hintText: 'いまどうしてる？'),
           )
         ],
       ),

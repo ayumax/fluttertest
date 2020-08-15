@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertest/bloc/configs.dart';
 import 'package:fluttertest/bloc/tweetClient.dart';
 import 'package:fluttertest/tweetView.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  final _configs = Configs();
+  _configs.deserializeConfigs();
+
+  runApp(MyApp(_configs));
 }
 
+// ライフサイクル対応をココみて実装すること
+// https://qiita.com/kurun_pan/items/0c6de1313844a8cc1603
+
 class MyApp extends StatelessWidget {
+  final Configs _configs;
+
+  MyApp(this._configs);
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
+          ChangeNotifierProvider.value(value: _configs),
           ChangeNotifierProvider(
-            create: (_) => TweetClient(),
+            create: (_) => TweetClient(_configs),
           )
         ],
         child: MaterialApp(
@@ -26,7 +38,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
             home: Scaffold(
-                appBar: AppBar(title: Text("Flutterさんぷる")),
+                appBar: AppBar(title: Text('Flutterさんぷる')),
                 body: HomeView(),
                 floatingActionButton: _TweetFloatingActionButton())));
   }
@@ -86,22 +98,22 @@ class TweetItemControl extends StatelessWidget {
               width: 30,
               height: 30,
               margin: EdgeInsets.all(2),
-              child: Image.asset("images/Icon.jpg")),
+              child: Image.asset(tweetItem.icon)),
           Flexible(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                 Row(children: [
                   Text(
-                    this.tweetItem.userName,
+                    tweetItem.userName,
                     style: Theme.of(context).primaryTextTheme.overline,
                   ),
                   Text(
-                    this.tweetItem.accountName,
+                    tweetItem.accountName,
                     style: Theme.of(context).textTheme.overline,
                   ),
                 ]),
-                Text(this.tweetItem.tweet,
+                Text(tweetItem.tweet,
                     textAlign: TextAlign.left,
                     style: Theme.of(context).primaryTextTheme.bodyText2)
               ])),
