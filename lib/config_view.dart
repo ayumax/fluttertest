@@ -144,6 +144,8 @@ class _ListRowIpAddress extends StatelessWidget {
           ),
         ),
         child: ListTile(
+            enabled: context.select((Configs config) =>
+                config.serverOrClient == EServerOrClient.client),
             leading: const Icon(Icons.place),
             title: Text('IPアドレス'),
             subtitle:
