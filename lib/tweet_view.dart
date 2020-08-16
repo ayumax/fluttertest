@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertest/bloc/tweetClient.dart';
+import 'package:fluttertest/bloc/tweet_client.dart';
 import 'package:provider/provider.dart';
 
 class TweetView extends StatelessWidget {
@@ -27,7 +27,7 @@ class _TweetControl extends StatelessWidget {
               FlatButton(
                 onPressed: () {
                   Provider.of<TweetClient>(context, listen: false)
-                      .doTweet('ayumax', '@ayuma_x', _tweetTextController.text);
+                      .doTweet(_tweetTextController.text);
 
                   Navigator.of(context).pop();
                 },

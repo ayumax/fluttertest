@@ -10,13 +10,13 @@ class TweetItem extends ChangeNotifier implements IJsonSerializable {
   String icon;
 
   TweetItem.fromTweetInfo(this.userName, this.accountName, this.tweet)
-      : icon = 'images/Icon.jpg';
+      : icon = 'images/myUser.png';
 
   TweetItem.fromJson(Map<String, dynamic> json)
       : userName = json['userName'] as String,
         accountName = json['accountName'] as String,
         tweet = json['tweet'] as String,
-        icon = 'images/Icon.jpg';
+        icon = 'images/myUser.png';
 
   @override
   Map<String, dynamic> toJson() => {
@@ -32,10 +32,6 @@ class TweetClient extends ChangeNotifier {
   TweetClient(this._configs) {
     IJsonSerializable.addMakeInstanceFunction(
         TweetItem, (json) => TweetItem.fromJson(json));
-
-    _configs.updateConfig.listen((x) => updateSocket());
-
-    updateSocket();
   }
 
   final _tweets = <TweetItem>[];
@@ -43,13 +39,15 @@ class TweetClient extends ChangeNotifier {
 
   ObjectDelivererManager<TweetItem> objectDeliverer;
 
-  void doTweet(String userName, String accountName, String tweetString) async {
+  String socketState = '未接続';
+
+  void doTweet(String tweetString) async {
     if (objectDeliverer == null) {
       return;
     }
 
-    final tweetItem =
-        TweetItem.fromTweetInfo(userName, accountName, tweetString);
+    final tweetItem = TweetItem.fromTweetInfo(
+        _configs.userName, _configs.userName, tweetString);
     _tweets.add(tweetItem);
 
     await objectDeliverer.sendMessageAsync(tweetItem);
@@ -63,6 +61,14 @@ class TweetClient extends ChangeNotifier {
     }
 
     objectDeliverer = ObjectDelivererManager<TweetItem>()
+      ..connected.listen((x) {
+        socketState = '接続済み';
+        notifyListeners();
+      })
+      ..disconnected.listen((x) {
+        socketState = '接続待ち';
+        notifyListeners();
+      })
       ..receiveData.listen((x) {
         x.message.icon = 'images/server.png';
         tweets.add(x.message);
@@ -84,5 +90,8 @@ class TweetClient extends ChangeNotifier {
 
     await objectDeliverer.startAsync(protocol, PacketRuleSizeBody.fromParam(4),
         ObjectJsonDeliveryBox<TweetItem>());
+
+    socketState = '接続待ち';
+    notifyListeners();
   }
 }

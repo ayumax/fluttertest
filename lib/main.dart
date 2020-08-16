@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:fluttertest/bloc/configs.dart';
-import 'package:fluttertest/bloc/tweetClient.dart';
-import 'package:fluttertest/tweetView.dart';
+import 'package:fluttertest/config_view.dart';
+import './bloc/configs.dart';
+import './bloc/tweet_client.dart';
+import './tweet_view.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  final _configs = Configs();
-  _configs.deserializeConfigs();
-
-  runApp(MyApp(_configs));
+  runApp(MyApp());
 }
 
 // ライフサイクル対応をココみて実装すること
 // https://qiita.com/kurun_pan/items/0c6de1313844a8cc1603
 
 class MyApp extends StatelessWidget {
-  final Configs _configs;
+  final _configs = Configs();
 
-  MyApp(this._configs);
+  MyApp();
 
   @override
   Widget build(BuildContext context) {
+    _configs.deserializeConfigs();
+
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: _configs),
@@ -38,9 +38,27 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
             home: Scaffold(
-                appBar: AppBar(title: Text('Flutterさんぷる')),
+                appBar: AppBar(
+                  title: Text('Flutterさんぷる'),
+                  actions: <Widget>[
+                    _SettingButton(),
+                  ],
+                ),
                 body: HomeView(),
                 floatingActionButton: _TweetFloatingActionButton())));
+  }
+}
+
+class _SettingButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        icon: Icon(Icons.settings),
+        onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ConfigView(),
+            )));
   }
 }
 
@@ -100,23 +118,21 @@ class TweetItemControl extends StatelessWidget {
               margin: EdgeInsets.all(2),
               child: Image.asset(tweetItem.icon)),
           Flexible(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                Row(children: [
-                  Text(
-                    tweetItem.userName,
-                    style: Theme.of(context).primaryTextTheme.overline,
-                  ),
-                  Text(
-                    tweetItem.accountName,
-                    style: Theme.of(context).textTheme.overline,
-                  ),
-                ]),
-                Text(tweetItem.tweet,
-                    textAlign: TextAlign.left,
-                    style: Theme.of(context).primaryTextTheme.bodyText2)
-              ])),
+              child: Container(
+                  margin: EdgeInsets.only(left: 10),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(children: [
+                          Text(
+                            tweetItem.userName,
+                            style: Theme.of(context).primaryTextTheme.overline,
+                          )
+                        ]),
+                        Text(tweetItem.tweet,
+                            textAlign: TextAlign.left,
+                            style: Theme.of(context).primaryTextTheme.bodyText2)
+                      ])))
         ]));
   }
 }

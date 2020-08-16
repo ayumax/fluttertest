@@ -1,17 +1,38 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum EServerOrClient { server, client }
 
 class Configs extends ChangeNotifier {
-  EServerOrClient serverOrClient = EServerOrClient.client;
-  String ipAddress = '10.0.2.2';
-  int port = 9013;
+  String _userName = 'user';
+  String get userName => _userName;
+  set userName(String newValue) {
+    _userName = newValue;
+    saveValues();
+  }
 
-  final _updateConfig = StreamController<Configs>.broadcast();
-  Stream<Configs> get updateConfig => _updateConfig.stream;
+  EServerOrClient _serverOrClient = EServerOrClient.client;
+  EServerOrClient get serverOrClient => _serverOrClient;
+  set serverOrClient(EServerOrClient newValue) {
+    _serverOrClient = newValue;
+    saveValues();
+  }
+
+  String get serverOrClientText =>
+      serverOrClient == EServerOrClient.client ? 'Client' : 'Server';
+  String _ipAddress = '10.0.2.2';
+  String get ipAddress => _ipAddress;
+  set ipAddress(String newValue) {
+    _ipAddress = newValue;
+    saveValues();
+  }
+
+  int _port = 9013;
+  int get port => _port;
+  set port(int newValue) {
+    _port = newValue;
+    saveValues();
+  }
 
   void deserializeConfigs() async {
     final pref = await SharedPreferences.getInstance();
@@ -37,7 +58,8 @@ class Configs extends ChangeNotifier {
     await pref.setInt('port', port);
   }
 
-  void updateSocket() {
-    _updateConfig.sink.add(this);
+  void saveValues() {
+    serializeConfigs();
+    notifyListeners();
   }
 }
