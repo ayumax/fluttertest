@@ -50,7 +50,7 @@ class TweetClient extends ChangeNotifier {
         _configs.userName, _configs.userName, tweetString);
     _tweets.add(tweetItem);
 
-    await objectDeliverer.sendMessageAsync(tweetItem);
+    await objectDeliverer.sendMessage(tweetItem);
 
     notifyListeners();
   }
@@ -88,7 +88,7 @@ class TweetClient extends ChangeNotifier {
         break;
     }
 
-    await objectDeliverer.startAsync(protocol, PacketRuleSizeBody.fromParam(4),
+    await objectDeliverer.start(protocol, PacketRuleSizeBody.fromParam(4),
         ObjectJsonDeliveryBox<TweetItem>());
 
     socketState = '接続待ち';
